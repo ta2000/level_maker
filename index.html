@@ -18,6 +18,7 @@
 
 <div>
 	<select id="select" onchange="setTile()">
+		<option>Erase</option>
 		<option>Player</option>
 		<option>Space Goblin</option>
 		<option>Wall</option>
@@ -37,7 +38,7 @@ var selectedTile = e.selectedIndex;
 function setTile() {
 	selectedTile = e.selectedIndex;
 }
-var colors = ["#00FF00", "#FF0000", "#0000FF"];
+var colors = ["#FFFFFF", "#00FF00", "#FF0000", "#0000FF"];
 
 var obj = {
 	board:[],
@@ -113,8 +114,8 @@ var Editor = {
 
 		if (x>=0 && y>=0 && x<=Editor.canvas.width && y<=Editor.canvas.height) {
 
-			x = (Math.floor(x/tileSize)*tileSize)/tileSize;
-			y = (Math.floor(y/tileSize)*tileSize)/tileSize;
+			x = Math.round((Math.floor(x/tileSize)*tileSize)/tileSize);
+			y = Math.round((Math.floor(y/tileSize)*tileSize)/tileSize);
 
 			var overlap = false;
 			for (var i = 0; i < obj.board.length; i++) {
@@ -126,7 +127,14 @@ var Editor = {
 			if (overlap) {
 				removeElement(x, y);
 			}
-			obj.board.push(new Tile( selectedTile, x, y ));
+
+			if (selectedTile!=0) {
+				obj.board.push(new Tile( selectedTile, x, y ));
+			} else {
+				removeElement(x,y);
+				Editor.start();
+			}
+
 		}
 		Editor.draw();
 	}
