@@ -44,6 +44,7 @@ var obj = {
 };
 
 
+
 function start() {
 	Editor.start();
 }
@@ -105,18 +106,45 @@ var Editor = {
 		y = e.clientY + document.body.scrollTop +
 	        document.documentElement.scrollTop;
 	    }
-	  
+
 		// Convert to coordinates relative to the canvas
 	    x -= Editor.canvas.offsetLeft;
 	    y -= Editor.canvas.offsetTop;
-		
+
 		if (x>=0 && y>=0 && x<=Editor.canvas.width && y<=Editor.canvas.height) {
-			obj.board.push(new Tile( selectedTile, (Math.floor(x/tileSize)*tileSize)/tileSize, (Math.floor(y/tileSize)*tileSize)/tileSize ));
-			// console.log((Math.floor(x/tileSize)*tileSize)/tileSize + ", " + (Math.floor(y/tileSize)*tileSize)/tileSize);
+
+			x = (Math.floor(x/tileSize)*tileSize)/tileSize;
+			y = (Math.floor(y/tileSize)*tileSize)/tileSize;
+
+			var overlap = false;
+			for (var i = 0; i < obj.board.length; i++) {
+
+				if ( (obj.board[i].x == x) && (obj.board[i].y == y) ) {
+					overlap = true;
+				}
+			}
+			if (overlap) {
+				removeElement(x, y);
+			}
+			obj.board.push(new Tile( selectedTile, x, y ));
 		}
 		Editor.draw();
 	}
 
+}
+
+function removeElement(x, y) {
+	var temp = [];
+	for (var i = 0; i < obj.board.length; i++) {
+		if ( (obj.board[i].y==y) && (obj.board[i].x==x) ) {
+			console.log("Removed index " + i);
+		} else {
+			temp.push(obj.board[i]);
+		}
+	}
+	console.log(obj.board);
+	console.log(temp);
+	obj.board = temp;
 }
 
 function save() {
