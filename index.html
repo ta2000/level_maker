@@ -55,6 +55,7 @@ var StartTileSize = 16;
 var tileSize = StartTileSize;
 
 var Editor = {
+	mousedown : false,
 	canvas : document.createElement("canvas"),
 	start : function() {
 		this.canvas.width = tileSize*document.getElementById('cWidth').value;
@@ -92,52 +93,62 @@ var Editor = {
 	},
 	mouseUpdate : function() {
 		// Check mouse down
-		window.addEventListener("mousedown", Editor.getPosition);
+		window.addEventListener("mousedown", Editor.mouseTrue);
+		window.addEventListener("mouseup", Editor.mouseFalse);
+		window.addEventListener("mousemove", Editor.getPosition);
 		window.requestAnimationFrame(Editor.mouseUpdate);
+	},
+	mouseTrue : function() {
+		Editor.mousedown = true;
+	},
+	mouseFalse : function() {
+		Editor.mousedown = false;
 	},
 	// Get canvas X/Y
 	getPosition : function(e) {
-	    var x;
-	    var y;
-	    if (e.pageX || e.pageY) {
-			x = e.pageX;
-			y = e.pageY;
-	    } else {
-		x = e.clientX + document.body.scrollLeft +
-	        document.documentElement.scrollLeft;
-		y = e.clientY + document.body.scrollTop +
-	        document.documentElement.scrollTop;
-	    }
+		if (Editor.mousedown) {
+		    var x;
+		    var y;
+		    if (e.pageX || e.pageY) {
+				x = e.pageX;
+				y = e.pageY;
+		    } else {
+			x = e.clientX + document.body.scrollLeft +
+		        document.documentElement.scrollLeft;
+			y = e.clientY + document.body.scrollTop +
+		        document.documentElement.scrollTop;
+		    }
 
-		// Convert to coordinates relative to the canvas
-	    x -= Editor.canvas.offsetLeft;
-	    y -= Editor.canvas.offsetTop;
+			// Convert to coordinates relative to the canvas
+		    x -= Editor.canvas.offsetLeft;
+		    y -= Editor.canvas.offsetTop;
 
-		if (x>=0 && y>=0 && x<=Editor.canvas.width && y<=Editor.canvas.height) {
+			if (x>=0 && y>=0 && x<=Editor.canvas.width && y<=Editor.canvas.height) {
 
-			x = Math.round((Math.floor(x/tileSize)*tileSize)/tileSize);
-			y = Math.round((Math.floor(y/tileSize)*tileSize)/tileSize);
+				x = Math.round((Math.floor(x/tileSize)*tileSize)/tileSize);
+				y = Math.round((Math.floor(y/tileSize)*tileSize)/tileSize);
 
-			var overlap = false;
-			for (var i = 0; i < obj.board.length; i++) {
+				var overlap = false;
+				for (var i = 0; i < obj.board.length; i++) {
 
-				if ( (obj.board[i].x == x) && (obj.board[i].y == y) ) {
-					overlap = true;
+					if ( (obj.board[i].x == x) && (obj.board[i].y == y) ) {
+						overlap = true;
+					}
 				}
-			}
-			if (overlap) {
-				removeElement(x, y);
-			}
+				if (overlap) {
+					removeElement(x, y);
+				}
 
-			if (selectedTile!=0) {
-				obj.board.push(new Tile( selectedTile, x, y ));
-			} else {
-				removeElement(x,y);
-				Editor.start();
-			}
+				if (selectedTile!=0) {
+					obj.board.push(new Tile( selectedTile, x, y ));
+				} else {
+					removeElement(x,y);
+					Editor.start();
+				}
 
+			}
+			Editor.draw();
 		}
-		Editor.draw();
 	}
 
 }
