@@ -96,6 +96,7 @@ var Editor = {
 		window.addEventListener("mousedown", Editor.mouseTrue);
 		window.addEventListener("mouseup", Editor.mouseFalse);
 		window.addEventListener("mousemove", Editor.getPosition);
+		window.addEventListener("mousedown", Editor.getPosition);
 		window.requestAnimationFrame(Editor.mouseUpdate);
 	},
 	mouseTrue : function() {
