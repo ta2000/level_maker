@@ -12,8 +12,13 @@
 	<input type="number" placeholder="Width" id="cWidth"></input>
 	<input type="number" placeholder="Height" id="cHeight"></input>
 	<button onclick="start()">Create</button>
+	<input type="file" id="fileinput" />
+</div>
+
+<div>
+	<input type="text" id="levelname" placeholder="Level Name" value="level" onchange="updateLevelName()"></input>
 	<button onclick="save()">Save</button>
-	<a download="level.JSON" id="download">Download</a>
+	<a download="level.json" id="download">Download</a>
 </div>
 
 <div>
@@ -29,6 +34,24 @@
 </div>
 
 <script type="text/javascript">
+function updateLevelName() {
+	document.getElementById('download').download=(document.getElementById('levelname').value + ".json");
+}
+
+document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+function readSingleFile(evt) {
+	var f = evt.target.files[0];
+	if (f) {
+		var r = new FileReader();
+		r.onload = function(e) {
+		Editor.loadLevel(e.target.result);
+	}
+		r.readAsText(f);
+	} else {
+		alert("Failed to load file");
+	}
+}
+
 function sliderUpdate() {
 	document.getElementById('rangeVal').innerHTML = document.getElementById('myRange').value;
 	tileSize = StartTileSize*document.getElementById('myRange').value;
@@ -41,7 +64,11 @@ function setTile() {
 }
 var colors = ["#FFFFFF", "#00FF00", "#FF0000", "#0000FF", "#FF00FF"];
 
+
+
 var obj = {
+	width:0,
+	height:0,
 	board:[],
 };
 
@@ -94,6 +121,12 @@ var Editor = {
 			this.ctx.stroke();
 		};
 	},
+	loadLevel : function(file) {
+		obj = JSON.parse(file);
+		document.getElementById('cWidth').value = obj.width;
+		document.getElementById('cHeight').value = obj.height;
+		Editor.start();
+	},
 	mouseTrue : function() {
 		Editor.mousedown = true;
 	},
@@ -139,6 +172,7 @@ var Editor = {
 					obj.board.push(new Tile( selectedTile, x, y ));
 				} else {
 					removeElement(x,y);
+					Editor.clear();
 				}
 
 			}
@@ -161,6 +195,9 @@ function removeElement(x, y) {
 }
 
 function save() {
+	obj.width = document.getElementById('cWidth').value;
+	obj.height = document.getElementById('cHeight').value;
+
 	var formBlob = new Blob([JSON.stringify(obj)], { type: 'text/plain' });
 	document.getElementById('download').href = window.URL.createObjectURL(formBlob);
 }
