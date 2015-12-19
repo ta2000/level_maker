@@ -48,6 +48,10 @@ var obj = {
 
 
 function start() {
+	window.addEventListener("mousedown", Editor.mouseTrue);
+	window.addEventListener("mouseup", Editor.mouseFalse);
+	window.addEventListener("mousemove", Editor.getPosition);
+	window.addEventListener("mousedown", Editor.getPosition);
 	Editor.start();
 }
 
@@ -64,7 +68,6 @@ var Editor = {
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		this.drawGrid();
 		this.draw();
-		this.mouseUpdate();
 	},
 	clear : function() {
 		this.canvas.width = this.canvas.width;
@@ -90,14 +93,6 @@ var Editor = {
 			this.ctx.lineTo(this.canvas.width, i);
 			this.ctx.stroke();
 		};
-	},
-	mouseUpdate : function() {
-		// Check mouse down
-		window.addEventListener("mousedown", Editor.mouseTrue);
-		window.addEventListener("mouseup", Editor.mouseFalse);
-		window.addEventListener("mousemove", Editor.getPosition);
-		window.addEventListener("mousedown", Editor.getPosition);
-		window.requestAnimationFrame(Editor.mouseUpdate);
 	},
 	mouseTrue : function() {
 		Editor.mousedown = true;
@@ -144,7 +139,6 @@ var Editor = {
 					obj.board.push(new Tile( selectedTile, x, y ));
 				} else {
 					removeElement(x,y);
-					Editor.start();
 				}
 
 			}
