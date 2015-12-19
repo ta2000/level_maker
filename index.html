@@ -28,6 +28,9 @@
 		<option>Space Goblin</option>
 		<option>Wall</option>
 		<option>Portal</option>
+		<option>Prisoner (crewman)</option>
+		<option>Hidden Power Up Wall</option>
+		<option>Jail Cell Door</option>
 	</select>
 	<input type="range" id="myRange" value="1" oninput="sliderUpdate()" step="0.01" min="0.5" max="5">
 	<p id="rangeVal">1</p>
@@ -62,7 +65,7 @@ var selectedTile = e.selectedIndex;
 function setTile() {
 	selectedTile = e.selectedIndex;
 }
-var colors = ["#FFFFFF", "#00FF00", "#FF0000", "#0000FF", "#FF00FF"];
+var colors = ["#FFFFFF", "#00FF00", "#FF0000", "#0000FF", "#FF00FF", "#FFFF00", "#33CCCC", "#595959"];
 
 
 
