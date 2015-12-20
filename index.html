@@ -111,7 +111,7 @@ var Editor = {
 				this.ctx.fillStyle = "#FFFFFF";
 				this.ctx.fillRect(obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			} else {
-				this.ctx.drawImage(currentType, obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
+				this.ctx.drawImage(new Image(currentType), obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			}
 		};
 		this.drawGrid();
