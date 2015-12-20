@@ -66,7 +66,6 @@ var selectedTile = e.selectedIndex;
 function setTile() {
 	selectedTile = e.selectedIndex;
 }
-var colors = ["#FFFFFF", "#00FF00", "#FF0000", "#0000FF", "#FF00FF", "#FFFF00", "#33CCCC", "#595959"];
 
 
 
@@ -106,12 +105,14 @@ var Editor = {
 	draw : function() {
 		for (var i=0; i<obj.board.length; i++) {
 			var currentType = document.getElementById('select').children[obj.board[i].type].value;
+			console.log(currentType);
 
 			if (currentType=="ERASE") {
 				this.ctx.fillStyle = "#FFFFFF";
 				this.ctx.fillRect(obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			} else {
 				this.ctx.drawImage(new Image(currentType), obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
+				console.log("Drew a new image");
 			}
 		};
 		this.drawGrid();
