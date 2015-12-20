@@ -24,7 +24,7 @@
 
 <div>
 	<select id="select" onchange="setTile()">
-		<option value="erase">					Erase</option>
+		<option value="ERASE">					Erase</option>
 		<option value="/tiles/player.png">		Player</option>
 		<option value="/tiles/space_goblin.png">Space Goblin</option>
 		<option value="/tiles/wall.png">		Wall</option>
@@ -66,6 +66,7 @@ var selectedTile = e.selectedIndex;
 function setTile() {
 	selectedTile = e.selectedIndex;
 }
+var images=[];
 
 
 
@@ -78,6 +79,9 @@ var obj = {
 
 
 function start() {
+	for (var i = 0; i < document.getElementById('select').children.length; i++) {
+		images[i] = document.getElementById('select').children[i].value;
+	}
 	window.addEventListener("mousedown", Editor.mouseTrue);
 	window.addEventListener("mouseup", Editor.mouseFalse);
 	window.addEventListener("mousemove", Editor.getPosition);
@@ -104,17 +108,14 @@ var Editor = {
 	},
 	draw : function() {
 		for (var i=0; i<obj.board.length; i++) {
-			var currentType = document.getElementById('select').children[obj.board[i].type].value;
-			console.log(currentType);
-
 			if (currentType=="ERASE") {
 				this.ctx.fillStyle = "#FFFFFF";
 				this.ctx.fillRect(obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			} else {
-				this.ctx.drawImage(new Image(currentType), obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
-				console.log("Drew a new image");
+				this.ctx.drawImage(images[obj.board[i].type], obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			}
 		};
+
 		this.drawGrid();
 	},
 	drawGrid : function() {
