@@ -80,8 +80,10 @@ var obj = {
 
 function start() {
 	for (var i = 0; i < document.getElementById('select').children.length; i++) {
-		images[i] = new Image();
-		images[i].src = document.getElementById('select').children[i].value;
+		if (images[i].src = document.getElementById('select').children[i].value!="ERASE") {
+			images[i] = new Image();
+			images[i].src = document.getElementById('select').children[i].value;
+		}
 	}
 	window.addEventListener("mousedown", Editor.mouseTrue);
 	window.addEventListener("mouseup", Editor.mouseFalse);
