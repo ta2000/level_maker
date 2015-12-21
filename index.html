@@ -80,7 +80,7 @@ var obj = {
 
 function start() {
 	for (var i = 0; i < document.getElementById('select').children.length; i++) {
-		if (images[i].src = document.getElementById('select').children[i].value!="ERASE") {
+		if (document.getElementById('select').children[i].value!="ERASE") {
 			images[i] = new Image();
 			images[i].src = document.getElementById('select').children[i].value;
 		}
