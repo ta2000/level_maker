@@ -30,7 +30,7 @@
 		<option value="/level_maker/tiles/wall.png">			Wall</option>
 		<option value="/level_maker/tiles/portal.png">			Portal</option>
 		<option value="/level_maker/tiles/prisoner.png">		Prisoner (crewman)</option>
-		<option value="/level_maker/tiles/powerup.png">		Hidden Power Up Wall</option>
+		<option value="/level_maker/tiles/powerup.png">			Hidden Power Up Wall</option>
 		<option value="/level_maker/tiles/door.png">			Jail Cell Door</option>
 	</select>
 	<input type="range" id="myRange" value="1" oninput="sliderUpdate()" step="0.01" min="0.5" max="5">
@@ -38,6 +38,19 @@
 </div>
 
 <script type="text/javascript">
+window.onload = function() {
+	for (var i = 0; i < document.getElementById('select').children.length; i++) {
+		if (document.getElementById('select').children[i].value!="ERASE") {
+			images[i] = new Image();
+			images[i].src = document.getElementById('select').children[i].value;
+		}
+	}
+	window.addEventListener("mousedown", Editor.mouseTrue);
+	window.addEventListener("mouseup", Editor.mouseFalse);
+	window.addEventListener("mousemove", Editor.getPosition);
+	window.addEventListener("mousedown", Editor.getPosition);
+}
+
 function updateLevelName() {
 	document.getElementById('download').download=(document.getElementById('levelname').value + ".json");
 }
@@ -59,7 +72,7 @@ function readSingleFile(evt) {
 function sliderUpdate() {
 	document.getElementById('rangeVal').innerHTML = document.getElementById('myRange').value;
 	tileSize = StartTileSize*document.getElementById('myRange').value;
-	start();
+	Editor.start();
 }
 var e = document.getElementById("select");
 var selectedTile = e.selectedIndex;
@@ -79,16 +92,6 @@ var obj = {
 
 
 function start() {
-	for (var i = 0; i < document.getElementById('select').children.length; i++) {
-		if (document.getElementById('select').children[i].value!="ERASE") {
-			images[i] = new Image();
-			images[i].src = document.getElementById('select').children[i].value;
-		}
-	}
-	window.addEventListener("mousedown", Editor.mouseTrue);
-	window.addEventListener("mouseup", Editor.mouseFalse);
-	window.addEventListener("mousemove", Editor.getPosition);
-	window.addEventListener("mousedown", Editor.getPosition);
 	Editor.start();
 }
 
