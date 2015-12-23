@@ -113,6 +113,7 @@ var Editor = {
 		this.canvas.width = this.canvas.width;
 	},
 	draw : function() {
+		Editor.clear();
 		for (var i=0; i<obj.board.length; i++) {
 			if (images[obj.board[i].type]=="ERASE") {
 				this.ctx.fillStyle = "#FFFFFF";
