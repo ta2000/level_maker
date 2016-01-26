@@ -1,8 +1,9 @@
 "use strict";
 
 class Tile {
-	constructor(type, x, y) {
-		this.type = type;
+	constructor(imgIndex, className, x, y) {
+		this.imgIndex = imgIndex;
+		this.className = className;
 		this.x = x;
 		this.y = y;
 	}
