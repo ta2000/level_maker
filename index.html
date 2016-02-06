@@ -27,6 +27,7 @@
 		<option value="ERASE">Erase</option>
 		<option value="/level_maker/tiles/player.png">Player</option>
 		<option value="/level_maker/tiles/space_goblin.png">Goblin</option>
+		<option value="/level_maker/tiles/goblin_soldier.png">GoblinSoldier</option>
 		<option value="/level_maker/tiles/wall.png">Wall</option>
 		<option value="/level_maker/tiles/prisoner.png">Crewman</option>
 		<option value="/level_maker/tiles/door.png">JailDoor</option>
@@ -43,7 +44,7 @@ window.onload = function() {
 			images[i].src = e.children[i].value;
 		}
 	}
-	
+
 	window.addEventListener("mousedown", Editor.mouseTrue);
 	window.addEventListener("mouseup", Editor.mouseFalse);
 	window.addEventListener("mousemove", Editor.getPosition);
