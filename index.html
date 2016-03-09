@@ -23,21 +23,60 @@
 </div>
 
 <div>
-	<select id="select" onchange="setTile()">
+	<select id="select">
 		<option value="ERASE">Erase</option>
-		<option value="/level_maker/tiles/player.png">Player</option>
-		<option value="/level_maker/tiles/space_goblin.png">Goblin</option>
-		<option value="/level_maker/tiles/goblin_soldier.png">GoblinSoldier</option>
-		<option value="/level_maker/tiles/wall.png">Wall</option>
-		<option value="/level_maker/tiles/prisoner.png">Crewman</option>
-		<option value="/level_maker/tiles/door.png">JailDoor</option>
 	</select>
 	<input type="range" id="myRange" value="1" oninput="sliderUpdate()" step="0.01" min="0.5" max="5">
 	<p id="rangeVal">1</p>
 </div>
 
+<div id="attributes">
+</div>
+
 <script type="text/javascript">
+var DEFAULT_TILES = {
+	"Player": {
+		"className": "Player",
+		"imageURL": "/level_maker/tiles/player.png",
+	},
+	"Goblin": {
+		"className": "Goblin",
+		"imageURL": "/level_maker/tiles/space_goblin.png",
+	},
+	"GoblinSoldier": {
+		"className": "GoblinSoldier",
+		"imageURL": "/level_maker/tiles/goblin_soldier.png",
+	},
+	"Wall": {
+		"className": "Wall",
+		"imageURL": "/level_maker/tiles/wall.png",
+	},
+	"Crewman": {
+		"className": "Crewman",
+		"imageURL": "/level_maker/tiles/prisoner.png",
+	},
+	"JailDoor": {
+		"className": "JailDoor",
+		"imageURL": "/level_maker/tiles/door.png",
+	},
+	"Portal": {
+		"className": "Portal",
+		"imageURL": "/level_maker/tiles/door.png",
+	},
+};
+
 window.onload = function() {
+	var select = document.getElementById("select");
+	for (var tile in DEFAULT_TILES) {
+		if (DEFAULT_TILES.hasOwnProperty(tile)) {
+			var option = document.createElement("option");
+			option.dataValue = DEFAULT_TILES[tile];
+			option.innerHTML = DEFAULT_TILES[tile].className;
+			option.value = DEFAULT_TILES[tile].className;
+			select.appendChild(option);
+		}
+	}
+
 	for (var i = 0; i < e.children.length; i++) {
 		if (e.children[i].value!="ERASE") {
 			images[i] = new Image();
@@ -49,6 +88,9 @@ window.onload = function() {
 	window.addEventListener("mouseup", Editor.mouseFalse);
 	window.addEventListener("mousemove", Editor.getPosition);
 	window.addEventListener("mousedown", Editor.getPosition);
+
+	var select = document.getElementById("select");
+	select.addEventListener("change", setTile);
 }
 
 function updateLevelName() {
@@ -76,7 +118,57 @@ function sliderUpdate() {
 }
 var e = document.getElementById("select");
 var selectedTile = e.selectedIndex;
+
+function attributesToObject() {
+	var attributesAsObject = {};
+	var attributes = document.getElementById("attributes");
+	console.log(attributes.childNodes);
+	for (var i = 0; i < attributes.childNodes.length; i++) {
+		var propDiv = attributes.childNodes[i];
+		console.log(propDiv.label.innerText, propDiv.value.value);
+		attributesAsObject[propDiv.label.innerText] = propDiv.value.value;
+	}
+	return attributesAsObject;
+}
+
+function populateAttributes(createClassOptions) {
+	var attributes = document.getElementById("attributes");
+	attributes.innerHTML = "";
+	for (var prop in createClassOptions) {
+		if (createClassOptions.hasOwnProperty(prop)) {
+			var propDiv = addAttribute();
+			propDiv.label.innerText = prop;
+			propDiv.value.value = createClassOptions[prop];
+		}
+	}
+	console.log(attributesToObject());
+	return attributes;
+}
+
+function addAttribute() {
+	var attributes = document.getElementById("attributes");
+
+	var propDiv = document.createElement("div");
+	attributes.appendChild(propDiv);
+
+	var label = document.createElement("p");
+	label.setAttribute("contentEditable", true);
+	label.innerText = "Key";
+	propDiv.appendChild(label);
+	propDiv.label = label;
+
+	var value = document.createElement("input");
+	value.value = "Value";
+	propDiv.appendChild(value);
+	propDiv.value = value;
+
+	return propDiv;
+}
+
 function setTile() {
+	var createClassOptions = e.options[e.selectedIndex].dataValue;
+	console.log(createClassOptions);
+	populateAttributes(createClassOptions);
 	selectedTile = e.selectedIndex;
 }
 
@@ -118,7 +210,7 @@ var Editor = {
 				this.ctx.fillStyle = "#FFFFFF";
 				this.ctx.fillRect(obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			} else {
-				this.ctx.drawImage(images[obj.board[i].imgIndex], obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
+				this.ctx.drawImage(obj.board[i].image, obj.board[i].x*tileSize, obj.board[i].y*tileSize, tileSize, tileSize);
 			}
 		};
 
@@ -187,7 +279,9 @@ var Editor = {
 				}
 
 				if (selectedTile!=0) {
-					obj.board.push(new Tile( selectedTile, document.getElementById('select').children[selectedTile].innerHTML, x, y ));
+					var createClassOptions = attributesToObject();
+
+					obj.board.push(new Tile(createClassOptions, x, y ));
 				} else {
 					removeElement(x,y);
 					Editor.clear();
