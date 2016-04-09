@@ -21,12 +21,12 @@ var Editor = {
 	},
 	draw : function() {
 		Editor.clear();
-		for (var i=0; i<obj.board.length; i++) {
-			if (images[obj.board[i].imgIndex]=="ERASE") {
+		for (var i=0; i<level.board.length; i++) {
+			if (images[level.board[i].imgIndex]=="ERASE") {
 				Editor.ctx.fillStyle = "#FFFFFF";
-				Editor.ctx.fillRect(obj.board[i].x*Editor.tileSize, obj.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
+				Editor.ctx.fillRect(level.board[i].x*Editor.tileSize, level.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
 			} else {
-				Editor.ctx.drawImage(images[obj.board[i].imgIndex], obj.board[i].x*Editor.tileSize, obj.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
+				Editor.ctx.drawImage(images[level.board[i].imgIndex], level.board[i].x*Editor.tileSize, level.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
 			}
 		};
 
@@ -48,9 +48,9 @@ var Editor = {
 		};
 	},
 	loadLevel : function(file) {
-		obj = JSON.parse(file);
-		document.getElementById('cWidth').value = obj.width;
-		document.getElementById('cHeight').value = obj.height;
+		level = JSON.parse(file);
+		document.getElementById('cWidth').value = level.width;
+		document.getElementById('cHeight').value = level.height;
 		Editor.start();
 	},
 	mouseTrue : function() {
@@ -84,9 +84,9 @@ var Editor = {
 				y = Math.round((Math.floor(y/Editor.tileSize)*Editor.tileSize)/Editor.tileSize);
 
 				var overlap = false;
-				for (var i = 0; i < obj.board.length; i++) {
+				for (var i = 0; i < level.board.length; i++) {
 
-					if ( (obj.board[i].x == x) && (obj.board[i].y == y) ) {
+					if ( (level.board[i].x == x) && (level.board[i].y == y) ) {
 						overlap = true;
 					}
 				}
@@ -95,7 +95,7 @@ var Editor = {
 				}
 
 				if (selectedTile!=0) {
-					obj.board.push(new Tile( selectedTile, document.getElementById('select').children[selectedTile].innerHTML, x, y ));
+					level.board.push(new Tile( selectedTile, document.getElementById('select').children[selectedTile].innerHTML, x, y ));
 				} else {
 					Editor.removeElement(x,y);
 					Editor.clear();
@@ -107,13 +107,13 @@ var Editor = {
 	},
 	removeElement : function(x, y) {
 		var temp = [];
-		for (var i = 0; i < obj.board.length; i++) {
-			if ( (obj.board[i].y==y) && (obj.board[i].x==x) ) {
+		for (var i = 0; i < level.board.length; i++) {
+			if ( (level.board[i].y==y) && (level.board[i].x==x) ) {
 				console.log("Removed index " + i);
 			} else {
-				temp.push(obj.board[i]);
+				temp.push(level.board[i]);
 			}
 		}
-		obj.board = temp;
+		level.board = temp;
 	}
 }

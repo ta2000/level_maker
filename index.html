@@ -13,7 +13,7 @@
 <div>
 	<input type="number" placeholder="Width" id="cWidth"></input>
 	<input type="number" placeholder="Height" id="cHeight"></input>
-	<button onclick="start()">Create</button>
+	<button onclick="Editor.update()">Create</button>
 	<input type="file" id="fileinput" />
 </div>
 
@@ -33,11 +33,21 @@
 		<option value="tiles/prisoner.png">Crewman</option>
 		<option value="tiles/levelexit.png">levelExit</option>
 	</select>
-	<input type="range" id="myRange" value="1" oninput="sliderUpdate()" step="0.01" min="0.5" max="5">
+	<input type="range" id="myRange" value="1" oninput="updateSlider()" step="0.01" min="0.5" max="5">
 	<p id="rangeVal">1</p>
 </div>
 
 <script type="text/javascript">
+// Object to hold level data
+var level = {
+	width:0,
+	height:0,
+	board:[],
+};
+
+// Holds images for each tile type
+var images = [];
+
 window.onload = function() {
 	for (var i = 0; i < e.children.length; i++) {
 		if (e.children[i].value!="ERASE") {
@@ -46,36 +56,16 @@ window.onload = function() {
 		}
 	}
 
+	// Send mouse activity to editor
 	window.addEventListener("mousedown", Editor.mouseTrue);
 	window.addEventListener("mouseup", Editor.mouseFalse);
 	window.addEventListener("mousemove", Editor.getPosition);
 	window.addEventListener("mousedown", Editor.getPosition);
 
-	start();
-}
+	// Read file when load button is pressed
+	document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
 
-function updateLevelName() {
-	document.getElementById('download').download=(document.getElementById('levelname').value + ".json");
-}
-
-document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
-function readSingleFile(evt) {
-	var f = evt.target.files[0];
-	if (f) {
-		var r = new FileReader();
-		r.onload = function(e) {
-		Editor.loadLevel(e.target.result);
-	}
-		r.readAsText(f);
-	} else {
-		alert("Failed to load file");
-	}
-}
-
-function sliderUpdate() {
-	document.getElementById('rangeVal').innerHTML = document.getElementById('myRange').value;
-	Editor.tileSize = Editor.StartTileSize*document.getElementById('myRange').value;
-	Editor.update();
+	Editor.start();
 }
 
 var e = document.getElementById("select");
@@ -84,25 +74,38 @@ function setTile() {
 	selectedTile = e.selectedIndex;
 }
 
-var images = [];
-
-
-
-var obj = {
-	width:0,
-	height:0,
-	board:[],
-};
-
-function start() {
-	Editor.start();
+// Update name of file when filename input is modified
+function updateLevelName() {
+	document.getElementById('download').download=(document.getElementById('levelname').value + ".json");
 }
 
-function save() {
-	obj.width = document.getElementById('cWidth').value;
-	obj.height = document.getElementById('cHeight').value;
+// Updates slider text and resizes/updates editor
+function updateSlider() {
+	document.getElementById('rangeVal').innerHTML = document.getElementById('myRange').value;
+	Editor.tileSize = Editor.StartTileSize*document.getElementById('myRange').value;
+	Editor.update();
+}
 
-	var formBlob = new Blob([JSON.stringify(obj)], { type: 'text/plain' });
+// Load file
+function readSingleFile(evt) {
+	var f = evt.target.files[0];
+	if (f) {
+		var r = new FileReader();
+		r.onload = function(e) {
+			Editor.loadLevel(e.target.result);
+		}
+		r.readAsText(f);
+	} else {
+		alert("Failed to load file");
+	}
+}
+
+// Save file
+function save() {
+	level.width = document.getElementById('cWidth').value;
+	level.height = document.getElementById('cHeight').value;
+
+	var formBlob = new Blob([JSON.stringify(level)], { type: 'text/plain' });
 	document.getElementById('download').href = window.URL.createObjectURL(formBlob);
 }
 
