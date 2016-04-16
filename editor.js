@@ -45,9 +45,16 @@ var Editor = {
 	},
 	loadLevel : function(file) {
 		level = JSON.parse(file);
+		for (var i = 0; i < level.board.length; i++) {
+			level.board[i].image = new Image();
+			level.board[i].image.src = level.board[i].imageURL;
+		}
 		document.getElementById('cWidth').value = level.width;
 		document.getElementById('cHeight').value = level.height;
-		Editor.update();
+		// Have to delay otherwise draw not called
+		setInterval(function () {
+			Editor.update();
+		}, 5);
 	},
 	mouseTrue : function() {
 		Editor.mousedown = true;
