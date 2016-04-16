@@ -4,12 +4,9 @@ var Editor = {
 	mousedown : false,
 	canvas : document.createElement("canvas"),
 	start : function() {
-		Editor.canvas.width = Editor.tileSize*document.getElementById('cWidth').value;
-		Editor.canvas.height = Editor.tileSize*document.getElementById('cHeight').value;
 		Editor.ctx = Editor.canvas.getContext("2d");
 		document.body.insertBefore(Editor.canvas, document.body.childNodes[0]);
-		Editor.drawGrid();
-		Editor.draw();
+		Editor.update();
 	},
 	update : function() {
 		Editor.canvas.width = Editor.tileSize*document.getElementById('cWidth').value;
@@ -22,14 +19,13 @@ var Editor = {
 	draw : function() {
 		Editor.clear();
 		for (var i=0; i<level.board.length; i++) {
-			if (images[level.board[i].imgIndex]=="ERASE") {
+			if (level.board[i].image==undefined) {
 				Editor.ctx.fillStyle = "#FFFFFF";
 				Editor.ctx.fillRect(level.board[i].x*Editor.tileSize, level.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
 			} else {
-				Editor.ctx.drawImage(images[level.board[i].imgIndex], level.board[i].x*Editor.tileSize, level.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
+				Editor.ctx.drawImage(level.board[i].image, level.board[i].x*Editor.tileSize, level.board[i].y*Editor.tileSize, Editor.tileSize, Editor.tileSize);
 			}
 		};
-
 		Editor.drawGrid();
 	},
 	drawGrid : function() {
@@ -51,13 +47,14 @@ var Editor = {
 		level = JSON.parse(file);
 		document.getElementById('cWidth').value = level.width;
 		document.getElementById('cHeight').value = level.height;
-		Editor.start();
+		Editor.update();
 	},
 	mouseTrue : function() {
 		Editor.mousedown = true;
 	},
 	mouseFalse : function() {
 		Editor.mousedown = false;
+		Editor.draw();
 	},
 	// Get canvas X/Y
 	getPosition : function(e) {
@@ -83,6 +80,7 @@ var Editor = {
 				x = Math.round((Math.floor(x/Editor.tileSize)*Editor.tileSize)/Editor.tileSize);
 				y = Math.round((Math.floor(y/Editor.tileSize)*Editor.tileSize)/Editor.tileSize);
 
+				// If tile already exists in location, delete it
 				var overlap = false;
 				for (var i = 0; i < level.board.length; i++) {
 
@@ -94,13 +92,13 @@ var Editor = {
 					Editor.removeElement(x, y);
 				}
 
+				// Create new tile if erase not selected
 				if (selectedTile!=0) {
-					level.board.push(new Tile( selectedTile, document.getElementById('select').children[selectedTile].innerHTML, x, y ));
+					level.board.push(new Tile( select.children[selectedTile].dataValue, x, y ));
 				} else {
 					Editor.removeElement(x,y);
 					Editor.clear();
 				}
-
 			}
 			Editor.draw();
 		}

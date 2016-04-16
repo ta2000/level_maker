@@ -26,18 +26,64 @@
 <div>
 	<select id="select" onchange="setTile()">
 		<option value="ERASE">Erase</option>
-		<option value="tiles/player.png">Player</option>
-		<option value="tiles/space_goblin.png">Goblin</option>
-		<option value="tiles/goblin_soldier.png">GoblinSoldier</option>
-		<option value="tiles/wall.png">Wall</option>
-		<option value="tiles/prisoner.png">Crewman</option>
-		<option value="tiles/levelexit.png">levelExit</option>
 	</select>
 	<input type="range" id="myRange" value="1" oninput="updateSlider()" step="0.01" min="0.5" max="5">
 	<p id="rangeVal">1</p>
 </div>
 
 <script type="text/javascript">
+var DEFAULT_TILES = {
+	"Player": {
+		"name": "Player",
+		"className": "Player",
+		"imageURL": "tiles/player.png"
+	},
+	"Goblin": {
+		"name": "Goblin",
+		"className": "Goblin",
+		"imageURL": "tiles/space_goblin.png"
+	},
+	"GoblinSoldier": {
+		"name": "GoblinSoldier",
+		"className": "GoblinSoldier",
+		"imageURL": "tiles/goblin_soldier.png"
+	},
+	"Wall": {
+		"name": "Wall",
+		"className": "Wall",
+		"imageURL": "tiles/wall.png"
+	},
+	"Crewman": {
+		"name": "Crewman",
+		"className": "Crewman",
+		"imageURL": "tiles/prisoner.png"
+	},
+	"LevelExit": {
+		"name": "LevelExitRight",
+		"className": "LevelExit",
+		"imageURL": "tiles/levelexitright.png",
+		"direction": "right"
+	},
+	"LevelExitLeft": {
+		"name": "LevelExitLeft",
+		"className": "LevelExit",
+		"imageURL": "tiles/levelexitleft.png",
+		"direction": "left"
+	},
+	"LevelExitUp": {
+		"name": "LevelExitUp",
+		"className": "LevelExit",
+		"imageURL": "tiles/levelexitup.png",
+		"direction": "up"
+	},
+	"LevelExitDown": {
+		"name": "LevelExitDown",
+		"className": "LevelExit",
+		"imageURL": "tiles/levelexitdown.png",
+		"direction": "down"
+	}
+};
+
 // Object to hold level data
 var level = {
 	width:0,
@@ -45,16 +91,18 @@ var level = {
 	board:[],
 };
 
-// Holds images for each tile type
-var images = [];
+var select = document.getElementById("select");
 
+// Creates <option> tags for each default tile
 window.onload = function() {
-	for (var i = 0; i < e.children.length; i++) {
-		if (e.children[i].value!="ERASE") {
-			images[i] = new Image();
-			images[i].src = e.children[i].value;
-		}
+	for (var tile in DEFAULT_TILES) {
+		var option = document.createElement("option");
+		option.dataValue = DEFAULT_TILES[tile];
+		option.innerHTML = DEFAULT_TILES[tile].name;
+		option.value = DEFAULT_TILES[tile].className;
+		select.appendChild(option);
 	}
+
 
 	// Send mouse activity to editor
 	window.addEventListener("mousedown", Editor.mouseTrue);
@@ -68,10 +116,9 @@ window.onload = function() {
 	Editor.start();
 }
 
-var e = document.getElementById("select");
-var selectedTile = e.selectedIndex;
+var selectedTile = select.selectedIndex;
 function setTile() {
-	selectedTile = e.selectedIndex;
+	selectedTile = select.selectedIndex;
 }
 
 // Update name of file when filename input is modified
