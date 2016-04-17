@@ -7,11 +7,11 @@ var Editor = {
 		Editor.ctx = Editor.canvas.getContext("2d");
 		document.body.insertBefore(Editor.canvas, document.body.childNodes[0]);
 		Editor.update();
+		Editor.draw();
 	},
 	update : function() {
 		Editor.canvas.width = Editor.tileSize*document.getElementById('cWidth').value;
 		Editor.canvas.height = Editor.tileSize*document.getElementById('cHeight').value;
-		Editor.draw();
 	},
 	clear : function() {
 		Editor.canvas.width = Editor.canvas.width;
@@ -27,6 +27,7 @@ var Editor = {
 			}
 		};
 		Editor.drawGrid();
+		window.requestAnimationFrame(Editor.draw);
 	},
 	drawGrid : function() {
 		// Draw grid
@@ -51,17 +52,12 @@ var Editor = {
 		}
 		document.getElementById('cWidth').value = level.width;
 		document.getElementById('cHeight').value = level.height;
-		// Have to delay otherwise draw not called
-		setInterval(function () {
-			Editor.update();
-		}, 5);
 	},
 	mouseTrue : function() {
 		Editor.mousedown = true;
 	},
 	mouseFalse : function() {
 		Editor.mousedown = false;
-		Editor.draw();
 	},
 	// Get canvas X/Y
 	getPosition : function(e) {
@@ -107,7 +103,6 @@ var Editor = {
 					Editor.clear();
 				}
 			}
-			Editor.draw();
 		}
 	},
 	removeElement : function(x, y) {

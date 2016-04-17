@@ -34,60 +34,51 @@
 <script type="text/javascript">
 var DEFAULT_TILES = {
 	"Player": {
-		"name": "Player",
 		"className": "Player",
-		"imageURL": "tiles/player.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/player.png",
 		"hidden": "false"
 	},
 	"Goblin": {
-		"name": "Goblin",
 		"className": "Goblin",
-		"imageURL": "tiles/space_goblin.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/space_goblin.png",
 		"hidden": "false"
 	},
 	"GoblinSoldier": {
-		"name": "GoblinSoldier",
 		"className": "GoblinSoldier",
-		"imageURL": "tiles/goblin_soldier.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/goblin_soldier.png",
 		"hidden": "false"
 	},
 	"Wall": {
-		"name": "Wall",
 		"className": "Wall",
-		"imageURL": "tiles/wall.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/wall.png",
 		"hidden": "false"
 	},
 	"Crewman": {
-		"name": "Crewman",
 		"className": "Crewman",
-		"imageURL": "tiles/prisoner.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/crewman.png",
 		"hidden": "false"
 	},
 	"LevelExitRight": {
-		"name": "LevelExitRight",
 		"className": "LevelExit",
-		"imageURL": "tiles/levelexitright.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitright.png",
 		"direction": "right",
 		"hidden": "true"
 	},
 	"LevelExitLeft": {
-		"name": "LevelExitLeft",
 		"className": "LevelExit",
-		"imageURL": "tiles/levelexitleft.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitleft.png",
 		"direction": "left",
 		"hidden": "true"
 	},
 	"LevelExitUp": {
-		"name": "LevelExitUp",
 		"className": "LevelExit",
-		"imageURL": "tiles/levelexitup.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitup.png",
 		"direction": "up",
 		"hidden": "true"
 	},
 	"LevelExitDown": {
-		"name": "LevelExitDown",
 		"className": "LevelExit",
-		"imageURL": "tiles/levelexitdown.png",
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitdown.png",
 		"direction": "down",
 		"hidden": "true"
 	}
@@ -107,7 +98,7 @@ window.onload = function() {
 	for (var tile in DEFAULT_TILES) {
 		var option = document.createElement("option");
 		option.dataValue = DEFAULT_TILES[tile];
-		option.innerHTML = DEFAULT_TILES[tile].name;
+		option.innerHTML = tile;
 		option.value = DEFAULT_TILES[tile].className;
 		select.appendChild(option);
 	}
