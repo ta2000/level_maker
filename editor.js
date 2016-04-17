@@ -52,6 +52,7 @@ var Editor = {
 		}
 		document.getElementById('cWidth').value = level.width;
 		document.getElementById('cHeight').value = level.height;
+		Editor.update();
 	},
 	mouseTrue : function() {
 		Editor.mousedown = true;
