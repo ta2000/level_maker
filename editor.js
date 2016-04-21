@@ -98,7 +98,7 @@ var Editor = {
 
 				// Create new tile if erase not selected
 				if (selectedTile!=0) {
-					level.board.push(new Tile( select.children[selectedTile].dataValue, x, y ));
+					level.board.push(new Tile( attributesToObject(), x, y ));
 				} else {
 					Editor.removeElement(x,y);
 					Editor.clear();

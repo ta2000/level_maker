@@ -31,56 +31,57 @@
 	<p id="rangeVal">1</p>
 </div>
 
+<div id="attributes"></div>
+
 <script type="text/javascript">
 var DEFAULT_TILES = {
 	"Player": {
 		"className": "Player",
-		"imageURL": "http://ta2000.github.io/Game/images/sprites/player.png",
-		"hidden": "false"
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/player.png"
 	},
 	"Goblin": {
 		"className": "Goblin",
-		"imageURL": "http://ta2000.github.io/Game/images/sprites/space_goblin.png",
-		"hidden": "false"
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/space_goblin.png"
 	},
 	"GoblinSoldier": {
 		"className": "GoblinSoldier",
-		"imageURL": "http://ta2000.github.io/Game/images/sprites/goblin_soldier.png",
-		"hidden": "false"
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/goblin_soldier.png"
 	},
 	"Wall": {
 		"className": "Wall",
-		"imageURL": "http://ta2000.github.io/Game/images/sprites/wall.png",
-		"hidden": "false"
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/wall.png"
 	},
 	"Crewman": {
 		"className": "Crewman",
-		"imageURL": "http://ta2000.github.io/Game/images/sprites/crewman.png",
-		"hidden": "false"
+		"imageURL": "http://ta2000.github.io/Game/images/sprites/crewman.png"
 	},
 	"LevelExitRight": {
 		"className": "LevelExit",
 		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitright.png",
 		"direction": "right",
-		"hidden": "true"
+		"hidden": "true",
+		"levelToLoad": "http://ta2000.github.io/Game/levels/level1.json"
 	},
 	"LevelExitLeft": {
 		"className": "LevelExit",
 		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitleft.png",
 		"direction": "left",
-		"hidden": "true"
+		"hidden": "true",
+		"levelToLoad": "http://ta2000.github.io/Game/levels/level1.json"
 	},
 	"LevelExitUp": {
 		"className": "LevelExit",
 		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitup.png",
 		"direction": "up",
-		"hidden": "true"
+		"hidden": "true",
+		"levelToLoad": "http://ta2000.github.io/Game/levels/level1.json"
 	},
 	"LevelExitDown": {
 		"className": "LevelExit",
 		"imageURL": "http://ta2000.github.io/Game/images/sprites/levelexitdown.png",
 		"direction": "down",
-		"hidden": "true"
+		"hidden": "true",
+		"levelToLoad": "http://ta2000.github.io/Game/levels/level1.json"
 	}
 };
 
@@ -88,7 +89,8 @@ var DEFAULT_TILES = {
 var level = {
 	width:0,
 	height:0,
-	board:[],
+	images:{},
+	board:[]
 };
 
 var select = document.getElementById("select");
@@ -118,7 +120,46 @@ window.onload = function() {
 
 var selectedTile = select.selectedIndex;
 function setTile() {
+	var createClassOptions = select.options[select.selectedIndex].dataValue;
+	populateAttributes(createClassOptions);
 	selectedTile = select.selectedIndex;
+}
+
+function attributesToObject() {
+	var attributesAsObject = {};
+	var attributes = document.getElementById("attributes");
+	for (var i = 0; i < attributes.childNodes.length; i++) {
+		var propDiv = attributes.childNodes[i];
+		attributesAsObject[propDiv.label.innerText] = propDiv.value.value;
+	}
+	return attributesAsObject;
+}
+function populateAttributes(createClassOptions) {
+	var attributes = document.getElementById("attributes");
+	attributes.innerHTML = "";
+	for (var prop in createClassOptions) {
+		if (createClassOptions.hasOwnProperty(prop)) {
+			var propDiv = addAttribute();
+			propDiv.label.innerText = prop;
+			propDiv.value.value = createClassOptions[prop];
+		}
+	}
+	return attributes;
+}
+function addAttribute() {
+	var attributes = document.getElementById("attributes");
+	var propDiv = document.createElement("div");
+	attributes.appendChild(propDiv);
+	var label = document.createElement("p");
+	label.setAttribute("contentEditable", true);
+	label.innerText = "Key";
+	propDiv.appendChild(label);
+	propDiv.label = label;
+	var value = document.createElement("input");
+	value.value = "Value";
+	propDiv.appendChild(value);
+	propDiv.value = value;
+	return propDiv;
 }
 
 // Update name of file when filename input is modified
@@ -152,8 +193,23 @@ function save() {
 	level.width = document.getElementById('cWidth').value;
 	level.height = document.getElementById('cHeight').value;
 
+	for (var i=0; i<level.board.length; i++)
+	{
+		delete level.board[i].image;
+		level.images[level.board[i].className] = level.board[i].imageURL;
+		delete level.board[i].imageURL;
+	}
+
 	var formBlob = new Blob([JSON.stringify(level)], { type: 'text/plain' });
 	document.getElementById('download').href = window.URL.createObjectURL(formBlob);
+
+	for (var i=0; i<level.board.length; i++)
+	{
+		level.board[i].image = new Image();
+		level.board[i].imageURL = level.images[level.board[i].className];
+		level.board[i].image.src = level.board[i].imageURL;
+	}
+
 }
 
 </script>
