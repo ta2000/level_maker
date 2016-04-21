@@ -48,6 +48,7 @@ var Editor = {
 		level = JSON.parse(file);
 		for (var i = 0; i < level.board.length; i++) {
 			level.board[i].image = new Image();
+			level.board[i].imageURL = level.images[level.board[i].className];
 			level.board[i].image.src = level.board[i].imageURL;
 		}
 		document.getElementById('cWidth').value = level.width;
